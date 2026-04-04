@@ -1,0 +1,7 @@
+{
+    "base_url": "http://144.31.139.115:5000/",
+    "browser": {
+        "headless": false,
+        "timeout": 30000
+    }
+}
