@@ -1,36 +1,30 @@
 from pages.base_page import BasePage
+from utils.enums import SortType
 
 
 class SearchPage(BasePage):
     def __init__(self, page):
         super().__init__(page)
 
-
         self.filter_sort = page.get_by_test_id("filter-sort")
-        self.low_to_high = page.get_by_role("option", name="Price: low to high").first
-        self.high_to_low = page.get_by_role("option", name="Price: high to low").first
-        self.loader = page.locator("//section[contains(@class, 'results-region is-loading')]")
-        self.titles = page.locator('[data-testid^="search-result-title-"]')
-        self.prices = page.locator('[data-testid^="search-result-price-"]')
+        self.loader = page.locator("//section[contains(@class, 'results-region') and contains(@class, 'is-loading')]")
+        self.titles = page.get_by_test_id("search-result-title")
+        self.prices = page.get_by_test_id("search-result-price")
         self.results = page.get_by_test_id("search-results-grid")
 
-    def sort (self, sort_type) :
+    def sort(self, sort_type: SortType):
         self.filter_sort.click()
-        if sort_type == "Price: low to high":
+        if sort_type == SortType.LOW_TO_HIGH:
             self.filter_sort.select_option("price_asc")
-        elif sort_type == "Price: high to low":
+        elif sort_type == SortType.HIGH_TO_LOW:
             self.filter_sort.select_option("price_desc")
-        return self
-
 
     def wait_for_result(self):
-        self.loader.wait_for(state = 'detached')
+        self.loader.wait_for(state='detached')
 
-
-    def get_articles_and_prices(self, count: int) :
+    def get_articles_and_prices(self, count: int):
         self.wait_for_result()
-        items =[]
-        results = self.results.all()[:count]
+        items = []
         all_titles = self.titles.all_text_contents()
         all_prices = self.prices.all_text_contents()
         for i in range(min(count, len(all_titles), len(all_prices))):
@@ -40,13 +34,13 @@ class SearchPage(BasePage):
             })
         return items
 
-
-
-
-
-
-
-
-
-
-
+    def get_prices(self, count: int):
+        items = self.get_articles_and_prices(count)
+        prices = []
+        for item in items:
+            price_str = item['price'].strip()
+            try:
+                prices.append(float(price_str))
+            except ValueError:
+                prices.append(0.0)
+        return prices

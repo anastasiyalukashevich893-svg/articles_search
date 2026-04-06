@@ -12,7 +12,7 @@ class ConfigReader:
             cls._instance = super().__new__(cls)
         return cls._instance
 
-    def load_config(self, config_path: str=None) -> dict:
+    def load_config(self, config_path: str = None) -> dict:
         if config_path is None:
             config_path = os.path.join(os.path.dirname(__file__), '..', 'config', 'config.json')
         with open(config_path, 'r', encoding='utf-8') as f:
@@ -40,5 +40,5 @@ class ConfigReader:
         return self.get('browser.headless', False)
 
     @property
-    def timeout(self)-> int:
+    def timeout(self) -> int:
         return self.get('browser.timeout', 30000)
