@@ -14,10 +14,7 @@ class SearchPage(BasePage):
 
     def sort(self, sort_type: SortType):
         self.filter_sort.click()
-        if sort_type == SortType.LOW_TO_HIGH:
-            self.filter_sort.select_option("price_asc")
-        elif sort_type == SortType.HIGH_TO_LOW:
-            self.filter_sort.select_option("price_desc")
+        self.filter_sort.select_option(sort_type.value)
 
     def wait_for_result(self):
         self.loader.wait_for(state='detached')

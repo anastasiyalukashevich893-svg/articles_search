@@ -11,7 +11,8 @@ class HomePage(BasePage):
         self.search_button = page.get_by_test_id("search-button")
 
     def logo_is_visible(self):
-        return self.main_page.wait_for(state='visible')
+        self.main_page.wait_for(state='visible')
+        return self.main_page.is_visible()
 
     def search(self, query: str):
         self.input_search.fill(query)
